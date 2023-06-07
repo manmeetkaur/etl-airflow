@@ -1,0 +1,79 @@
+name: Astronomer CI - Deploy code (Multiple Branches)
+
+on:
+  push:
+    branches: [dev]
+  pull_request:
+    types:
+      - closed
+    branches: [main]
+
+jobs:
+  dev-push:
+    if: github.ref == 'refs/heads/dev'
+    env:
+      ## Sets DEV Deployment API key credentials as environment variables
+      ASTRONOMER_KEY_ID: ${{ secrets.DEV_ASTRONOMER_KEY_ID }}
+      ASTRONOMER_KEY_SECRET: ${{ secrets.DEV_ASTRONOMER_KEY_SECRET }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout repo
+      uses: actions/checkout@v3
+    - name: Deploy to Astro
+      run: |
+        curl -sSL install.astronomer.io | sudo bash -s
+        astro deploy
+  prod-push:
+    if: github.event.action == 'closed' && github.event.pull_request.merged == true
+    env:
+      ## Sets PROD Deployment API key credentials as environment variables
+      ASTRONOMER_KEY_ID: ${{ secrets.ASTRONOMER_KEY_ID }}
+      ASTRONOMER_KEY_SECRET: ${{ secrets.ASTRONOMER_KEY_SECRET }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout repo
+      uses: actions/checkout@v3
+    - name: Deploy to Astro
+      run: |
+        curl -sSL install.astronomer.io | sudo bash -s
+        astro deploy
+
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+#     # ENV VARs ############################################################################################
+#     env:
+#       ORGANIZATION_ID: ${{ secrets.ORGANIZATION_ID }}
+#     steps:
+#     - name: Set mk environment variables
+#       run: |
+#         echo "DEPLOYMENT_ID=${{ secrets.MK_DEPLOYMENT_ID }}" >> $GITHUB_ENV
+#         echo "ASTRONOMER_KEY_ID=${{ secrets.MK_ASTRONOMER_KEY_ID }}" >> $GITHUB_ENV
+#         echo "ASTRONOMER_KEY_SECRET=${{ secrets.MK_ASTRONOMER_KEY_SECRET }}" >> $GITHUB_ENV
+#       if: github.ref == 'refs/heads/mk_dev'
+#     - name: Set dev environment variables
+#       run: |
+#         echo "DEPLOYMENT_ID=${{ secrets.DEV_DEPLOYMENT_ID }}" >> $GITHUB_ENV
+#         echo "ASTRONOMER_KEY_ID=${{ secrets.DEV_ASTRONOMER_KEY_ID }}" >> $GITHUB_ENV
+#         echo "ASTRONOMER_KEY_SECRET=${{ secrets.DEV_ASTRONOMER_KEY_SECRET }}" >> $GITHUB_ENV
+#       if: github.ref == 'refs/heads/dev'
+#     - name: Set stage environment variables
+#       run: |
+#         echo "DEPLOYMENT_ID=${{ secrets.STAGE_DEPLOYMENT_ID }}" >> $GITHUB_ENV
+#         echo "ASTRONOMER_KEY_ID=${{ secrets.STAGE_ASTRONOMER_KEY_ID }}" >> $GITHUB_ENV
+#         echo "ASTRONOMER_KEY_SECRET=${{ secrets.STAGE_ASTRONOMER_KEY_SECRET }}" >> $GITHUB_ENV
+#       if: github.ref == 'refs/heads/stage'
+#     - name: Set stage environment variables
+#       run: |
+#         echo "DEPLOYMENT_ID=${{ secrets.MAIN_DEPLOYMENT_ID }}" >> $GITHUB_ENV
+#         echo "ASTRONOMER_KEY_ID=${{ secrets.MAIN_ASTRONOMER_KEY_ID }}" >> $GITHUB_ENV
+#         echo "ASTRONOMER_KEY_SECRET=${{ secrets.MAIN_ASTRONOMER_KEY_SECRET }}" >> $GITHUB_ENV
+#       if: github.ref == 'refs/heads/main'
+#     # ENV VARs ############################################################################################
+#     - name: Checkout our Repo.
+#       uses: actions/checkout@v3
+#     - name: Install the Astro CLI.
+#       run: brew install astronomer/cloud/astrocloud@1.3.2
+#     - name: Deploying the image to Astro.
+#       run: 
+#         astrocloud deploy ${{ env.DEPLOYMENT_ID }}
