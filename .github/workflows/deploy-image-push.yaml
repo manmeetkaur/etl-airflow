@@ -10,8 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       ASTRONOMER_KEY_ID: ${{ secrets.ASTRONOMER_KEY_ID }}
-      ASTRONOMER_KEY_SECRET: ${{ secrets.ASTRONOMER_SECRET_ID }}
-      DEV_DEPLOYMENT_ID: ${{ secrets.DEV_DEPLOYMENT_ID }}
+      ASTRONOMER_KEY_SECRET: ${{ secrets.ASTRONOMER_KEY_SECRET }}
+      # DEV_DEPLOYMENT_ID: ${{ secrets.DEV_DEPLOYMENT_ID }}
     steps:
     - name: Check out the repo
       uses: actions/checkout@v3
@@ -31,7 +31,7 @@ jobs:
     - name: Deploy to Astro
       run: |
         curl -sSL install.astronomer.io | sudo bash -s
-        astro deploy ${{ env.DEV_DEPLOYMENT_ID }} --image-name ${{ steps.image_tag.outputs.image_tag }}
+        astro deploy --image-name ${{ steps.image_tag.outputs.image_tag }}
 
 # jobs:
 #   build:
