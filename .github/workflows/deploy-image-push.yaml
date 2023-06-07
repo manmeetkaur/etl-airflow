@@ -1,16 +1,34 @@
-name: Astronomer CI - Deploy Code
+name: Astronomer CI - Deploy code (Multiple Branches)
+
 on:
   push:
-    branches:
-      - dev
-
-env:
-  ## Sets Deployment API key credentials as environment variables
-  ASTRONOMER_KEY_ID: ${{ secrets.ASTRONOMER_KEY_ID }}
-  ASTRONOMER_KEY_SECRET: ${{ secrets.ASTRONOMER_KEY_SECRET }}
+    branches: [dev]
+  pull_request:
+    types:
+      - closed
+    branches: [main]
 
 jobs:
-  build:
+  dev-push:
+    if: github.ref == 'refs/heads/dev'
+    env:
+      ## Sets DEV Deployment API key credentials as environment variables
+      ASTRONOMER_KEY_ID: ${{ secrets.DEV_ASTRONOMER_KEY_ID }}
+      ASTRONOMER_KEY_SECRET: ${{ secrets.DEV_ASTRONOMER_KEY_SECRET }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout repo
+      uses: actions/checkout@v3
+    - name: Deploy to Astro
+      run: |
+        curl -sSL install.astronomer.io | sudo bash -s
+        astro deploy
+  prod-push:
+    if: github.event.action == 'closed' && github.event.pull_request.merged == true
+    env:
+      ## Sets PROD Deployment API key credentials as environment variables
+      ASTRONOMER_KEY_ID: ${{ secrets.ASTRONOMER_KEY_ID }}
+      ASTRONOMER_KEY_SECRET: ${{ secrets.ASTRONOMER_KEY_SECRET }}
     runs-on: ubuntu-latest
     steps:
     - name: checkout repo
