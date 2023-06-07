@@ -3,7 +3,7 @@ name: Astronomer CI - Additional build-time args
 on:
   push:
     branches:
-      - main
+      - dev
 
 jobs:
   build:
