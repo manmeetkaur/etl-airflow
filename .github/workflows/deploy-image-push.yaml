@@ -1,42 +1,36 @@
-name: Astronomer CI - Deploy code (Multiple Branches)
+name: Astronomer CI - Additional build-time args
 
 on:
   push:
-    branches: [dev]
-  pull_request:
-    types:
-      - closed
-    branches: [main]
+    branches:
+      - main
 
 jobs:
-  dev-push:
-    if: github.ref == 'refs/heads/dev'
-    env:
-      ## Sets DEV Deployment API key credentials as environment variables
-      ASTRONOMER_KEY_ID: ${{ secrets.DEV_ASTRONOMER_KEY_ID }}
-      ASTRONOMER_KEY_SECRET: ${{ secrets.DEV_ASTRONOMER_KEY_SECRET }}
+  build:
     runs-on: ubuntu-latest
-    steps:
-    - name: checkout repo
-      uses: actions/checkout@v3
-    - name: Deploy to Astro
-      run: |
-        curl -sSL install.astronomer.io | sudo bash -s
-        astro deploy
-  prod-push:
-    if: github.event.action == 'closed' && github.event.pull_request.merged == true
     env:
-      ## Sets PROD Deployment API key credentials as environment variables
       ASTRONOMER_KEY_ID: ${{ secrets.ASTRONOMER_KEY_ID }}
-      ASTRONOMER_KEY_SECRET: ${{ secrets.ASTRONOMER_KEY_SECRET }}
-    runs-on: ubuntu-latest
+      ASTRONOMER_KEY_SECRET: ${{ secrets.ASTRONOMER_KEY_ID }}
     steps:
-    - name: checkout repo
+    - name: Check out the repo
       uses: actions/checkout@v3
+    - name: Create image tag
+      id: image_tag
+      run: echo ::set-output name=image_tag::astro-$(date +%Y%m%d%H%M%S)
+    - name: Build image
+      uses: docker/build-push-action@v4
+      with:
+        tags: ${{ steps.image_tag.outputs.image_tag }}
+        load: true
+        # Define your custom image's build arguments, contexts, and connections here using
+        # the available GitHub Action settings:
+        # https://github.com/docker/build-push-action#customizing .
+        # This example uses `build-args` , but your use case might require configuring
+        # different values.
     - name: Deploy to Astro
       run: |
         curl -sSL install.astronomer.io | sudo bash -s
-        astro deploy
+        astro deploy --image-name ${{ steps.image_tag.outputs.image_tag }}
 
 # jobs:
 #   build:
