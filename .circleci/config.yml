@@ -39,7 +39,3 @@ workflows:
       - build_image_and_deploy:
           context:
              - airflow
-          filters:
-            branches:
-              only:
-                - main
