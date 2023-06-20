@@ -49,8 +49,16 @@ workflows:
       - build_image_and_deploy:
           context:
              - airflow
+          filters:
+            branches:
+              only:
+                - main
   build-and-deploy-dev:
     jobs:
       - build_image_and_deploy_dev:
           context:
-             - circleci-project-setup
+             - dev_airflow
+          filters:
+            branches:
+              only:
+                - circleci-project-setup
