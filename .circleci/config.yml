@@ -25,6 +25,21 @@ jobs:
             curl -sSL install.astronomer.io | sudo bash -s
             astro deploy -f
 
+  build_image_and_deploy_dev:
+    docker:
+      - image: cimg/base:stable
+    # Add steps to the job
+    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+    steps:
+      - setup_remote_docker:
+          version: 20.10.11
+      - checkout
+      - run:
+          name: "Deploy to Astro"
+          command: |
+            curl -sSL install.astronomer.io | sudo bash -s
+            astro deploy ${ASTRO_DEPLOYMENT_ID} -f
+
 # Invoke jobs with workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
@@ -34,3 +49,8 @@ workflows:
       - build_image_and_deploy:
           context:
              - airflow
+  build-and-deploy-dev:
+    jobs:
+      - build_image_and_deploy_dev:
+          context:
+             - circleci-project-setup
