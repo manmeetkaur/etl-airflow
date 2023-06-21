@@ -12,7 +12,7 @@ jobs:
 
   build_image_and_deploy:
     docker:
-      - image: docker:17.05.0-ce-git
+      - image: cimg/base:stable
     # Add steps to the job
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
