@@ -20,16 +20,13 @@ jobs:
           version: 20.10.11
       - checkout
       - run:
-          name: "Create image tag and build image"
+          name: "Build image and deploy"
           command: |
             set -e
             echo "export image_tag=astro-$(date +%Y%m%d%H%M%S)" >> $BASH_ENV
             source "$BASH_ENV"
             printenv
             docker build -t ${image_tag} .
-      - run:
-          name: "Deploy to Astro"
-          command: |
             curl -sSL install.astronomer.io | sudo bash -s
             astro deploy --image-name ${image-tag} ${ASTRO_DEPLOYMENT_ID} -f
 
