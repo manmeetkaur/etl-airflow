@@ -39,6 +39,6 @@ workflows:
   version: 2.1
   build-and-deploy-prod:
     jobs:
-      - build_image_and_deploy_prod:
+      - build_image_and_deploy:
           context:
             - dev-airflow
