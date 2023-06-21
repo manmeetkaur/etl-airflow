@@ -27,7 +27,7 @@ jobs:
             source "$BASH_ENV"
             printenv
             docker build -t ${image_tag} .
-            docker ls
+            docker image ls
             # curl -sSL install.astronomer.io | sudo bash -s
             # astro deploy --image-name ${image-tag} ${ASTRO_DEPLOYMENT_ID} -f
 
