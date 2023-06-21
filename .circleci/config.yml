@@ -27,8 +27,9 @@ jobs:
             source "$BASH_ENV"
             printenv
             docker build -t ${image_tag} .
-            curl -sSL install.astronomer.io | sudo bash -s
-            astro deploy --image-name ${image-tag} ${ASTRO_DEPLOYMENT_ID} -f
+            docker ls
+            # curl -sSL install.astronomer.io | sudo bash -s
+            # astro deploy --image-name ${image-tag} ${ASTRO_DEPLOYMENT_ID} -f
 
 # Invoke jobs with workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
