@@ -58,7 +58,7 @@ workflows:
     jobs:
       - build_image_and_deploy_dev:
           context:
-             - dev_airflow
+             - dev-airflow
           filters:
             branches:
               only:
