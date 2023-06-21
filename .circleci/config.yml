@@ -12,7 +12,7 @@ jobs:
 
   build_image_and_deploy:
     docker:
-      - image: cimg/base:stable
+      - image: docker:17.05.0-ce-git
     # Add steps to the job
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
@@ -20,26 +20,18 @@ jobs:
           version: 20.10.11
       - checkout
       - run:
-          name: "Deploy to Astro"
+          name: "Create image tag"
           command: |
-            curl -sSL install.astronomer.io | sudo bash -s
-            astro deploy -f
-
-  build_image_and_deploy_dev:
-    docker:
-      - image: cimg/base:stable
-    # Add steps to the job
-    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
-    steps:
-      - setup_remote_docker:
-          version: 20.10.11
-      - checkout
+            set -e
+            echo "export image_tag=image_tag::astro-$(date +%Y%m%d%H%M%S)" >> $BASH_ENV
+          name: "Build Docker image"
+          command: |
+            docker build -t ${image_tag} .
       - run:
           name: "Deploy to Astro"
           command: |
-            echo ${ASTRO_DEPLOYMENT_ID}
             curl -sSL install.astronomer.io | sudo bash -s
-            astro deploy ${ASTRO_DEPLOYMENT_ID} -f
+            astro deploy --image-name ${image-tag} ${ASTRO_DEPLOYMENT_ID} -f
 
 # Invoke jobs with workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
@@ -47,19 +39,6 @@ workflows:
   version: 2.1
   build-and-deploy-prod:
     jobs:
-      - build_image_and_deploy:
+      - build_image_and_deploy_prod:
           context:
-             - airflow
-          filters:
-            branches:
-              only:
-                - main
-  build-and-deploy-dev:
-    jobs:
-      - build_image_and_deploy_dev:
-          context:
-             - dev-airflow
-          filters:
-            branches:
-              only:
-                - circleci-project-setup
+            - dev-airflow
