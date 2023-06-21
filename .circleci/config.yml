@@ -20,15 +20,12 @@ jobs:
           version: 20.10.11
       - checkout
       - run:
-          name: "Create image tag"
+          name: "Create image tag and build image"
           command: |
             set -e
             echo "export image_tag=astro-$(date +%Y%m%d%H%M%S)" >> $BASH_ENV
             source "$BASH_ENV"
             printenv
-      - run:
-          name: "Build Docker image"
-          command: |
             docker build -t ${image_tag} .
       - run:
           name: "Deploy to Astro"
