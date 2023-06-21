@@ -24,6 +24,7 @@ jobs:
           command: |
             set -e
             echo "export image_tag=image_tag::astro-$(date +%Y%m%d%H%M%S)" >> $BASH_ENV
+      - run:
           name: "Build Docker image"
           command: |
             docker build -t ${image_tag} .
