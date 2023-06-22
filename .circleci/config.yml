@@ -27,8 +27,10 @@ jobs:
             echo ${files}
             find="dags"
             if [[ ${files[*]} =~ (^|[[:space:]])"$find"($|[[:space:]]) && ${#files[@]} -eq 1 ]]; then
+              echo "only deploying dags"
               astro deploy ${ASTRO_DEPLOYMENT_ID} --dags -f;
             else
+              echo "image deploy"
               astro deploy ${ASTRO_DEPLOYMENT_ID} -f;
             fi
 
