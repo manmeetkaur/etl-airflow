@@ -22,14 +22,16 @@ jobs:
       - run:
           name: "Build image and deploy"
           command: |
-            set -e
-            echo "export image_tag=astro-$(date +%Y%m%d%H%M%S)" >> $BASH_ENV
-            source "$BASH_ENV"
-            printenv
-            docker build -t ${image_tag} .
-            docker image ls
             curl -sSL install.astronomer.io | sudo bash -s
-            astro deploy --image-name ${image_tag} ${ASTRO_DEPLOYMENT_ID} -f
+            files=($(git diff-tree HEAD --name-only --no-commit-id))
+            echo ${files}
+            find="dags"
+            if [[ ${files[*]} =~ (^|[[:space:]])"$find"($|[[:space:]]) && ${#files[@]} -eq 1 ]]; then
+              astro deploy ${ASTRO_DEPLOYMENT_ID} --dags -f;
+            else
+              astro deploy ${ASTRO_DEPLOYMENT_ID} -f;
+            fi
+
 
 # Invoke jobs with workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
