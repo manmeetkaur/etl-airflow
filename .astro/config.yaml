@@ -1,2 +1,4 @@
+postgres:
+  port: "5433"
 project:
   name: etl-airflow
