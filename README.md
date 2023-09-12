@@ -37,6 +37,6 @@ DAG sql in: `include/etl_db_to_db/`
 
 - aws=`aws://<YOUR_ACCESS_ID>:<YOUR_SECRET_KEY>@`
 
-- postgres=`postgres://<YOUR_POSTGRES_USER>:<YOURPASSWORD>@<YOUR-RDS-NAME>.<YOUR-RDS-ID>.<YOUR-REGION>.rds.amazonaws.com:5432/<YOUR-DATABASE>?__extra__=%7B%7D^`
+- postgres=`postgres://<YOUR_POSTGRES_USER>:<YOURPASSWORD>@<YOUR-RDS-NAME>.<YOUR-RDS-ID>.<YOUR-REGION>.rds.amazonaws.com:5432/<YOUR-DATABASE>?__extra__=%7B%7D`
 
 To see how to export your connections in URI format see, [Import and export Airflow objects using Astro CLI](https://docs.astronomer.io/astro/import-export-connections-variables#using-the-astro-cli-local-environments-only).
