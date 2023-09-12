@@ -8,13 +8,13 @@ For detailed instructions, see [Astro CLI docs](https://docs.astronomer.io/astro
 
 ## Assuming the following details about our data stack:
 
-**Source database:** PostgreSQL
-**Target database:** Snowflake
-**Sync Frequency:** Inter-day (Batch)
-**Source tables:** customer, customer_address, customer_payment
-**Target table:** customer
-**Sync type:** Full sync followed by daily incremental syncs based on a timestamp column in source, updated_at
-**SCD Type:** Target table is a SCD Type 2
+- **Source database:** PostgreSQL
+- **Target database:** Snowflake
+- **Sync Frequency:** Inter-day (Batch)
+- **Source tables:** customer, customer_address, customer_payment
+- **Target table:** customer
+- **Sync type:** Full sync followed by daily incremental syncs based on a timestamp column in source, updated_at
+- **SCD Type:** Target table is a SCD Type 2
 
 ### Example pipeline - etl_db_to_db.py
 
