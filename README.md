@@ -22,7 +22,7 @@ Setup SQL in: `include/setup/`
 
 DAG sql in: `include/etl_db_to_db/`
 
-### Variable for the example pipeline looks like:
+### Variable for the example pipeline:
 
 ```
 {
@@ -31,7 +31,7 @@ DAG sql in: `include/etl_db_to_db/`
 }
 ```
 
-### Connections used
+### Connections used:
 
 - snowflake=`snowflake://<YOURUSER>:<YOURPASSWORD>@/<YOUR-SCHEMA>?__extra__=%7B%22account%22%3A+%22<YOUR-ACCOUNT>%22%2C+%22warehouse%22%3A+%22<YOUR-WAREHOUSE>%22%2C+%22database%22%3A+%22<YOUR-DATABASE>%22%2C+%22region%22%3A+%22<YOUR-REGION>%22%2C+%22role%22%3A+%22<YOUR-ROLE>%22%2C+%22insecure_mode%22%3A+false%7D`
 
