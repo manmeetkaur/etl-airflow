@@ -85,7 +85,7 @@ def airflow_data_pipeline():
     @task
     def load_target():
         """
-        Load data from S3 to Redshift using COPY command.
+        Load data from stage schema to target schema in Redshift using INSERT command.
         """
         logging.info("Loading data from S3 to Redshift")
         sql = """
